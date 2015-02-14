@@ -7,14 +7,15 @@ Routes.prototype.set = function(server, path) {
   //
   for (var key in routes) {
     var routeContainer = routes[key];
+    var pathFile = '/' + key;
     for (var k in routeContainer) {
       var singleRoute = routeContainer[k];
-      this._addRoute(server, singleRoute);
+      this._addRoute(server, singleRoute, pathFile);
     };
   }
 };
 
-Routes.prototype._addRoute = function(server, route) {
+Routes.prototype._addRoute = function(server, route, pathFile) {
   var name = server.name || 'default-name';
   this.alreadyRouted[name] = this.alreadyRouted[name] || [];
   for (var path in route) {
@@ -23,8 +24,9 @@ Routes.prototype._addRoute = function(server, route) {
       var action = routePath[method];
       method = method.toLowerCase();
       //
-      var key = method + ':' + path;
+      var key = method + ':' + pathFile + path;
       //
+      path = pathFile + path;
       if (this.alreadyRouted[name].indexOf(key) !== -1) {
         console.warn('Route already added: %s, skipping...', path);
       } else {
@@ -39,5 +41,4 @@ Routes.prototype._addRoute = function(server, route) {
     }
   }
 };
-
 module.exports = new Routes();
